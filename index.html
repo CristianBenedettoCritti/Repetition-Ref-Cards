@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repetition Ref. Cards – Modul 346</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">☁️ <span>Modul 346 · Repetition</span></div>
+  <nav id="nav">
+    <button data-tab="uebersicht" class="active">Übersicht</button>
+    <button data-tab="erklaerungen">Erklärungen</button>
+    <button data-tab="karten">Lernkarten</button>
+    <button data-tab="quiz">Quiz</button>
+    <button data-tab="aufgaben">Aufgaben</button>
+    <button data-tab="glossar">Glossar</button>
+  </nav>
+  <div class="progress-mini" title="Gesamtfortschritt"><div id="globalBar"></div></div>
+</header>
+
+<main>
+<!-- ÜBERSICHT -->
+<section id="uebersicht" class="tab active">
+  <div class="hero">
+    <h1>Architecture Ref. Cards – Repetition</h1>
+    <p>Interaktive Repetition zu <b>IaaS, virtuellen Maschinen, SSH-Keypairs, Cloud-Init, Security Groups und nginx</b>. Lies die Erklärungen, übe mit Lernkarten und löse Quiz und Aufgaben. Du bekommst nach jeder Antwort direkt Feedback.</p>
+    <div class="hero-stats">
+      <div><b id="statQuiz">0</b><span>Quiz-Punkte</span></div>
+      <div><b id="statCards">0</b><span>Karten gewusst</span></div>
+      <div><b id="statTasks">0</b><span>Aufgaben gelöst</span></div>
+    </div>
+    <button class="btn" id="resetAll">Fortschritt zurücksetzen</button>
+  </div>
+
+  <h2>Themen</h2>
+  <div class="grid" id="topicGrid"></div>
+
+  <h2>Lernpfad</h2>
+  <ol class="path">
+    <li><b>Erklärungen</b> lesen – verstehe die Konzepte.</li>
+    <li><b>Lernkarten</b> – prüfe dein Wissen spielerisch.</li>
+    <li><b>Quiz</b> – Multiple-Choice mit Erklärung.</li>
+    <li><b>Aufgaben</b> – Lückentext, Zuordnen, Reihenfolge, Cloud-Init und SSH-Terminal.</li>
+  </ol>
+</section>
+
+<!-- ERKLÄRUNGEN -->
+<section id="erklaerungen" class="tab">
+  <h2>Erklärungen</h2>
+  <p class="muted">Klicke auf ein Thema, um es aufzuklappen.</p>
+  <div id="accordion"></div>
+</section>
+
+<!-- LERNKARTEN -->
+<section id="karten" class="tab">
+  <h2>Lernkarten</h2>
+  <p class="muted">Klicke auf die Karte, um die Antwort zu sehen. Leertaste = umdrehen, Pfeiltasten = weiter/zurück.</p>
+  <div class="card-wrap">
+    <div class="flash" id="flash" tabindex="0">
+      <div class="face front"><small id="cardCat"></small><p id="cardQ"></p></div>
+      <div class="face back"><p id="cardA"></p></div>
+    </div>
+    <div class="card-info"><span id="cardCount"></span></div>
+    <div class="row">
+      <button class="btn ghost" id="prevCard">← Zurück</button>
+      <button class="btn bad" id="unknownCard">✗ Nochmal üben</button>
+      <button class="btn good" id="knownCard">✓ Gewusst</button>
+      <button class="btn ghost" id="nextCard">Weiter →</button>
+    </div>
+    <div class="row"><button class="btn ghost" id="shuffleCards">🔀 Mischen</button></div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="tab">
+  <h2>Quiz</h2>
+  <div id="quizBox"></div>
+</section>
+
+<!-- AUFGABEN -->
+<section id="aufgaben" class="tab">
+  <h2>Lernaufgaben</h2>
+  <p class="muted">Löse die Aufgaben und prüfe dein Ergebnis mit dem Button.</p>
+
+  <div class="task" id="t1">
+    <h3>Aufgabe 1 · Lückentext: IaaS &amp; VM</h3>
+    <p class="gap">
+      Bei <input data-a="iaas" size="5"> bekommt man virtualisierte Infrastruktur wie Server, Speicher und Netzwerk. Das Betriebssystem und die Anwendungen verwaltet der
+      <input data-a="kunde|kundin|nutzer|benutzer" size="8">. Die Hardware gehört dem <input data-a="provider|anbieter|cloudanbieter|cloud-anbieter" size="10">. Eine virtuelle Maschine läuft auf einem
+      <input data-a="hypervisor" size="10">. Bei AWS heisst der VM-Dienst <input data-a="ec2" size="5">.
+    </p>
+    <button class="btn" data-check="gap">Prüfen</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task" id="t2">
+    <h3>Aufgabe 2 · Zuordnen</h3>
+    <p>Wähle zu jedem Begriff die passende Beschreibung.</p>
+    <div id="matchBox"></div>
+    <button class="btn" data-check="match">Prüfen</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task" id="t3">
+    <h3>Aufgabe 3 · Reihenfolge: VM auf AWS erstellen</h3>
+    <p>Bringe die Schritte in die richtige Reihenfolge (mit ▲ ▼).</p>
+    <ul id="orderList" class="order"></ul>
+    <button class="btn" data-check="order">Prüfen</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task" id="t4">
+    <h3>Aufgabe 4 · Cloud-Init: Fehler finden</h3>
+    <p>Dieses User-Data-Skript soll nginx installieren und eine Startseite erstellen. Welche Aussagen sind korrekt? (Mehrfachauswahl)</p>
+<pre>packages:
+  - nginx
+runcmd:
+  - systemctl enable --now nginx
+  - echo "&lt;h1&gt;Hallo&lt;/h1&gt;" &gt; /var/www/html/index.html</pre>
+    <div id="ciBox" class="opts"></div>
+    <button class="btn" data-check="ci">Prüfen</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task" id="t5">
+    <h3>Aufgabe 5 · Cloud-Init Baukasten</h3>
+    <p>Wähle aus, was deine VM beim ersten Start automatisch tun soll. Das Skript entsteht live.</p>
+    <div class="opts" id="ciBuilder">
+      <label><input type="checkbox" value="update"> Paketliste aktualisieren</label>
+      <label><input type="checkbox" value="nginx"> nginx installieren</label>
+      <label><input type="checkbox" value="start"> nginx starten &amp; aktivieren</label>
+      <label><input type="checkbox" value="page"> Eigene Startseite schreiben</label>
+      <label><input type="checkbox" value="user"> Benutzer «student» mit SSH-Key anlegen</label>
+    </div>
+    <pre id="ciOut">#cloud-config</pre>
+    <button class="btn" data-check="builder">Prüfen (Ziel: Webserver mit Startseite)</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task" id="t6">
+    <h3>Aufgabe 6 · SSH-Terminal</h3>
+    <p>Dein Keypair heisst <code>mein-key.pem</code>, die Instanz hat die öffentliche IP <code>3.75.12.34</code> und läuft mit Ubuntu (Standardbenutzer <code>ubuntu</code>).</p>
+    <p><b>Schritt 1:</b> Schütze den privaten Schlüssel (nur du darfst ihn lesen). <b>Schritt 2:</b> Verbinde dich per SSH.</p>
+    <div class="term" id="term">
+      <div id="termOut">Gib die Befehle ein und drücke Enter.</div>
+      <div class="termline"><span>$</span><input id="termIn" autocomplete="off" spellcheck="false"></div>
+    </div>
+    <div class="feedback" id="termFb"></div>
+    <details><summary>Tipp anzeigen</summary><p class="muted">Berechtigungen ändern: <code>chmod</code>. Verbinden: <code>ssh -i Schlüssel benutzer@ip</code></p></details>
+  </div>
+
+  <div class="task" id="t7">
+    <h3>Aufgabe 7 · Security Group</h3>
+    <p>Du willst, dass deine Webseite aus dem Internet erreichbar ist und du dich per SSH verbinden kannst. Welche Inbound-Regeln brauchst du mindestens?</p>
+    <div class="opts" id="sgBox"></div>
+    <button class="btn" data-check="sg">Prüfen</button>
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- GLOSSAR -->
+<section id="glossar" class="tab">
+  <h2>Glossar</h2>
+  <input type="search" id="gsearch" placeholder="Begriff suchen …">
+  <dl id="glist"></dl>
+</section>
+</main>
+
+<footer>Modul 346 · BBW Berufsbildungsschule Winterthur · Repetition Architecture Ref. Cards</footer>
+<script src="script.js"></script>
+</body>
+</html>
